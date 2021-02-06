@@ -5,6 +5,7 @@ import re
 from os.path import join, dirname
 from datetime import datetime
 from threading import Thread, Lock
+from audio import play_audio
 
 # Globally accessible
 ser = serial.Serial('/dev/cu.usbmodem1411', 9600, timeout=5)
@@ -12,8 +13,8 @@ ser = serial.Serial('/dev/cu.usbmodem1411', 9600, timeout=5)
 serial_lock = Lock()
 
 def eventMonitoring():
+    time_spent_procrastinating = 0
 
-    # Thread variables
     bad_apps = set(["facebook", "twitter", "netflix", "reddit", 
                     "quora", "messenger", "9gag", "instagram", "linkedin", "whatsapp"])
 
@@ -27,6 +28,11 @@ def eventMonitoring():
                 serial_lock.acquire()
                 ser.write(bytes("a","UTF-8"))
                 serial_lock.release()
+                
+                time_spent_procrastinating += 1
+                if time_spent_procrastinating % 5 == 0:
+                    Thread(target=play_audio, args=(keyword, )).start()
+
             
 if __name__ == "__main__":
     try:
