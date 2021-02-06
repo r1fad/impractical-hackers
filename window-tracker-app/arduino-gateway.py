@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread, Lock
 
 # Globally accessible
-# ser = serial.Serial('/dev/cu.usbmodem1411', 9600, timeout=5)
+ser = serial.Serial('/dev/cu.usbmodem1411', 9600, timeout=5)
 
 serial_lock = Lock()
 
@@ -25,7 +25,7 @@ def eventMonitoring():
             if keyword in bad_apps:
                 print ("Bad app - {}".format(keyword))
                 serial_lock.acquire()
-                # ser.write(bytes("a","UTF-8"))
+                ser.write(bytes("a","UTF-8"))
                 serial_lock.release()
             
 if __name__ == "__main__":
