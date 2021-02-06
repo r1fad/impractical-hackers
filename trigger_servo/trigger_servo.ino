@@ -24,6 +24,8 @@ Servo smacker;
 
 bool badPosture = false;
 bool procrastination = false;
+long totalTicksOverThreshold = 0;
+long ticksDifference = 0;
 
 
 void setup() {
@@ -35,7 +37,21 @@ void setup() {
 
 void loop() {
 
-    sensorValue = analogRead(pressureSensor);              
+    sensorValue = analogRead(pressureSensor);
+
+    ticksDifference = abs(sensorValue - 1000);
+    if (ticksDifference > 5) {
+      totalTicksOverThreshold++; 
+    }
+
+    if(totalTicksOverThreshold > 6)
+    {
+          
+          Serial.println("Smack");
+          badPosture = true;
+          totalTicksOverThreshold = 0;
+    }
+                  
     // print the results to the serial monitor:                      
     Serial.println(sensorValue); 
 
