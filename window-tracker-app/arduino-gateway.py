@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread, Lock
 
 # Globally accessible
-ser = serial.Serial('/dev/cu.usbmodem1411', 9600, timeout=5)
+ser = serial.Serial('/dev/cu.usbmodem141101', 9600, timeout=5)
 
 serial_lock = Lock()
 
