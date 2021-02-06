@@ -32,6 +32,8 @@ def eventMonitoring():
                 time_spent_procrastinating += 1
                 if time_spent_procrastinating % 5 == 0:
                     Thread(target=play_audio, args=(keyword, )).start()
+            else:
+                time_spent_procrastinating = 0
 
             
 if __name__ == "__main__":
