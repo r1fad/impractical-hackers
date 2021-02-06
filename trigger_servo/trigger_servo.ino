@@ -1,5 +1,5 @@
-//const int analogInPin = A4;  // Analog input pin that the potentiometer is attached to
-//int sensorValue = 0;        // value read from the pot
+const int pressureSensor = A4;  // Analog input pin that the potentiometer is attached to
+int sensorValue = 0;        // value read from the pot
 // 
 //void setup() {
 //  // initialize serial communications at 9600 bps:
@@ -20,33 +20,48 @@
 
 #define TURN_TIME 100
 
-Servo someServo;
+Servo smacker;
 
-bool badPosture = true;
+bool badPosture = false;
+bool procrastination = false;
 
-void setup() 
-{
+
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(pressureSensor, INPUT_PULLUP); 
    
 }  
 
-void loop()
-{
+void loop() {
 
-    if (badPosture) {
-      someServo.attach(9);
-      someServo.write(180);
-      // Go on turning for the right duration
-      delay(TURN_TIME);
-      // Stop turning
-      someServo.write(90);
-      
-      delay(2000);
-      someServo.attach(9);
-      someServo.write(0);
-      delay(TURN_TIME);
-      someServo.write(90);
-      someServo.detach();
+    sensorValue = analogRead(pressureSensor);              
+    // print the results to the serial monitor:                      
+    Serial.println(sensorValue); 
+
+    if (badPosture || procrastination) {
+      smackUser();
       badPosture = false;
+      procrastination = false;
     }
 
 }
+
+void smackUser() {
+
+    for (int i = 0; i <= 3; i++){
+        smacker.attach(9);
+        smacker.write(180);
+        // Go on turning for the right duration
+        delay(TURN_TIME);
+        // Stop turning
+        smacker.write(90);
+        delay(2000);
+        smacker.attach(9);
+        smacker.write(0);
+        delay(TURN_TIME);
+        smacker.write(90);
+        smacker.detach();    
+    }
+      
+ }
