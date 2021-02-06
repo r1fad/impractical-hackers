@@ -1,5 +1,3 @@
-const int pressureSensor = A4;  // Analog input pin that the potentiometer is attached to
-int sensorValue = 0;        // value read from the pot
 // 
 //void setup() {
 //  // initialize serial communications at 9600 bps:
@@ -18,7 +16,8 @@ int sensorValue = 0;        // value read from the pot
 
 #include<Servo.h>
 
-#define TURN_TIME 100
+#define DOWN_TIME 130
+#define UP_TIME 260
 
 Servo smacker;
 
@@ -26,13 +25,20 @@ bool badPosture = false;
 bool procrastination = false;
 long totalTicksOverThreshold = 0;
 long ticksDifference = 0;
+long startTime = 0;
+const int pressureSensor = A4;  // Analog input pin that the potentiometer is attached to
+int sensorValue = 0;        // value read from the pot
+int pos = 0;
 
 
 void setup() {
 
   Serial.begin(9600);
   pinMode(pressureSensor, INPUT_PULLUP); 
-   
+  delay(2000);
+  smacker.attach(9);
+ 
+  
 }  
 
 void loop() {
@@ -42,53 +48,51 @@ void loop() {
     if (Serial.available() > 0) {
       // read the incoming byte:
       char incomingByte = Serial.read();
+      Serial.println(incomingByte);
   
       //Take appropriate action based on flag
       switch (incomingByte) {
         case 'a':
-          procastination = true;
+          procrastination = true;
+          
           break;
       }
     }
 
-    ticksDifference = abs(sensorValue - 1000);
-    if (ticksDifference > 5) {
+    ticksDifference = abs(sensorValue - 999);
+    if (ticksDifference >= 5) {
       totalTicksOverThreshold++; 
     }
 
-    if(totalTicksOverThreshold > 6) {
-          
+    if(totalTicksOverThreshold > 20) {
           Serial.println("Smack");
           badPosture = true;
           totalTicksOverThreshold = 0;
     }
                   
-    // print the results to the serial monitor:                      
+//    // print the results to the serial monitor:                      
     Serial.println(sensorValue); 
 
     if (badPosture || procrastination) {
       smackUser();
-      badPosture = false;
-      procrastination = false;
     }
 
 }
 
 void smackUser() {
 
-    for (int i = 0; i <= 3; i++){
-        smacker.attach(9);
-        smacker.write(180);
-        // Go on turning for the right duration
-        delay(TURN_TIME);
-        // Stop turning
-        smacker.write(90);
-        delay(2000);
-        smacker.attach(9);
-        smacker.write(0);
-        delay(TURN_TIME);
-        smacker.write(90);
-        smacker.detach();    
-    }
-      
+  for (pos = 0; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    smacker.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(5);                       // waits 15ms for the servo to reach the position
+  }
+  
+  for (pos = 90; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+    smacker.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(5);                       // waits 15ms for the servo to reach the position
+  } 
+
+  badPosture = false;
+  procrastination = false;
+   
  }
