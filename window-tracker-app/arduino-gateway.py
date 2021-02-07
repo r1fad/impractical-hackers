@@ -36,7 +36,7 @@ def eventMonitoring():
                 serial_lock.acquire()
                 ser.write(bytes("a", "UTF-8"))
                 serial_lock.release()
-                thread = Thread(target=play_audio, args=(prompts, bad_app)).start()
+                thread = Thread(target=play_audio, args=(time_spent_procrastinating, prompts, bad_app)).start()
         else:
             prompts = 0
             time_spent_procrastinating = 0

@@ -2,6 +2,7 @@ from google.cloud import texttospeech
 from playsound import playsound
 import time 
 import html
+from tweet import tweet_status
 
 # run export GOOGLE_APPLICATION_CREDENTIALS="impractical-hackers-ce3c2d8b1bea.json"
 
@@ -50,9 +51,10 @@ def text_to_ssml(raw_lines):
 # Instantiates a client
 client = texttospeech.TextToSpeechClient()
 
-def play_audio(prompts, app="facebook"):
+def play_audio(time_spent, prompts, app="facebook"):
 
   if prompts > MAX_PROMPTS:
+    tweet_status(time_spent, prompts, app)
     return
 
   # Set the text input to be synthesized

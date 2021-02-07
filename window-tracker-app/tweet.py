@@ -30,11 +30,11 @@ def time_spent_prettier(seconds):
   return f'{h:d} hours {m:2d} minute(s) and {s:02d} seconds'
   
 
-def tweet_status(time_spent=100, prompts=100, app="reddit", text=""):
+def tweet_status(time_spent=100, prompts=100, app="reddit"):
   if prompts % 10 != 0:
     return
 
-  text = "My user is procrastinating. They are currently browsing {} and has spent {} on it. {}".format(app, time_spent_prettier(time_spent), get_exclamation())  
+  text = "My user is procrastinating. They are currently browsing {} and has spent {} on it. {}".format(app.capitalize(), time_spent_prettier(time_spent), get_exclamation())  
   api.update_status(text)
 
 if __name__ == "__main__":
