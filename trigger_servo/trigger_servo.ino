@@ -29,12 +29,14 @@ long startTime = 0;
 const int pressureSensor = A4;  // Analog input pin that the potentiometer is attached to
 int sensorValue = 0;        // value read from the pot
 int pos = 0;
+const int buzzer = 3;
 
 
 void setup() {
 
   Serial.begin(9600);
   pinMode(pressureSensor, INPUT_PULLUP); 
+  pinMode(buzzer, OUTPUT);
   delay(2000);
   smacker.attach(9);
  
@@ -59,12 +61,12 @@ void loop() {
       }
     }
 
-    ticksDifference = abs(sensorValue - 999);
-    if (ticksDifference >= 5) {
+    ticksDifference = sensorValue - 250;
+    if (ticksDifference <= -10) {
       totalTicksOverThreshold++; 
     }
 
-    if(totalTicksOverThreshold > 20) {
+    if(totalTicksOverThreshold > 100) {
           Serial.println("Smack");
           badPosture = true;
           totalTicksOverThreshold = 0;
@@ -80,6 +82,10 @@ void loop() {
 }
 
 void smackUser() {
+
+  tone(buzzer, 1000); // Send 1KHz sound signal...
+  delay(1000);        // ...for 1 sec
+  noTone(buzzer);
 
   for (pos = 0; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
