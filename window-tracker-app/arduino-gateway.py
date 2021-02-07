@@ -31,12 +31,11 @@ def eventMonitoring():
             time_spent_procrastinating += 1
             print ("Bad app - {} - time spent: {} - prompted: {}".format(bad_app[0], time_spent_procrastinating, prompts))
             
-            serial_lock.acquire()
-            ser.write(bytes("a","UTF-8"))
-            serial_lock.release()
-            
             if time_spent_procrastinating % TIME_INTERVAL == 0:
                 prompts += 1
+                serial_lock.acquire()
+                ser.write(bytes("a", "UTF-8"))
+                serial_lock.release()
                 thread = Thread(target=play_audio, args=(prompts, bad_app)).start()
         else:
             prompts = 0
